@@ -2,20 +2,20 @@ import { useState } from "react"
 import type { SquareType } from "../types/type"
 import Board from "./Board"
 
-function Game() {
+const Game = () => {
     const [history, setHistory] = useState<SquareType[][]>([Array(9).fill(null)])
     const [currentMove, setCurrentMove] = useState<number>(0)
 
     const isXNext = currentMove % 2 === 0
     const currentSquares = history[currentMove]
 
-    function handlePlay(nextSquares: SquareType[]) {
+    const handlePlay = (nextSquares: SquareType[]) => {
         const nextHistory = [...history.slice(0, currentMove + 1), nextSquares]
         setHistory(nextHistory)
         setCurrentMove(nextHistory.length - 1)
     }
 
-    function jumpTo(nextMove: number) {
+    const jumpTo = (nextMove: number) => {
         setCurrentMove(nextMove)
     }
 

@@ -2,8 +2,8 @@ import type { BoardProps } from "../types/type"
 import Square from "./Square"
 import calculateWinner from "../utils/calculateWinner"
 
-function Board({ isXNext, squares, onPlay }: BoardProps) {
-    function handleClick(i: number) {
+const Board = ({ isXNext, squares, onPlay }: BoardProps) => {
+    const handleClick = (i: number) => {
         if (squares[i] || calculateWinner(squares)) {
             return
         }

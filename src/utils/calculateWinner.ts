@@ -1,6 +1,6 @@
 import type { Player, SquareType } from "../types/type"
 
-function calculateWinner(squares: SquareType[]): Player | null {
+const calculateWinner = (squares: SquareType[]): Player | null => {
     const lines = [
         [0, 1, 2],
         [3, 4, 5],
