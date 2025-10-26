@@ -12,3 +12,12 @@ export type SquareProps = {
     value: SquareType
     onSquareClick: () => void
 }
+
+export type GameState = {
+    history: SquareType[][]
+    currentMove: number
+}
+
+export type GameAction =
+    | { type: "PLAY"; nextSquares: SquareType[] }
+    | { type: "JUMP_TO"; nextMove: number }

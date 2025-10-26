@@ -1,25 +1,48 @@
-import { useState } from "react"
-import type { SquareType } from "../types/type"
+import { useReducer } from "react"
+import type { GameAction, GameState, SquareType } from "../types/type"
 import Board from "./Board"
 
-const Game = () => {
-    const [history, setHistory] = useState<SquareType[][]>([Array(9).fill(null)])
-    const [currentMove, setCurrentMove] = useState<number>(0)
+const gameReducer = (state: GameState, action: GameAction): GameState => {
+    switch (action.type) {
+        case "PLAY": {
+            const nextHistory = [
+                ...state.history.slice(0, state.currentMove + 1),
+                action.nextSquares,
+            ]
+            return {
+                history: nextHistory,
+                currentMove: nextHistory.length - 1,
+            }
+        }
+        case "JUMP_TO": {
+            return {
+                ...state,
+                currentMove: action.nextMove,
+            }
+        }
+        default:
+            return state
+    }
+}
 
-    const isXNext = currentMove % 2 === 0
-    const currentSquares = history[currentMove]
+const Game = () => {
+    const [state, dispatch] = useReducer(gameReducer, {
+        history: [Array(9).fill(null)],
+        currentMove: 0,
+    })
+
+    const isXNext = state.currentMove % 2 === 0
+    const currentSquares = state.history[state.currentMove]
 
     const handlePlay = (nextSquares: SquareType[]) => {
-        const nextHistory = [...history.slice(0, currentMove + 1), nextSquares]
-        setHistory(nextHistory)
-        setCurrentMove(nextHistory.length - 1)
+        dispatch({ type: "PLAY", nextSquares })
     }
 
     const jumpTo = (nextMove: number) => {
-        setCurrentMove(nextMove)
+        dispatch({ type: "JUMP_TO", nextMove })
     }
 
-    const moves = history.map((_, move) => {
+    const moves = state.history.map((_, move) => {
         let description
         if (move > 0) {
             description = "Go to move #" + move
