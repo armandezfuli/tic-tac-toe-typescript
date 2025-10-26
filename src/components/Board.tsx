@@ -1,22 +1,24 @@
-import type { BoardProps } from "../types/type"
+import { useGame } from "../context/GameContext"
 import Square from "./Square"
 import calculateWinner from "../utils/calculateWinner"
 
-const Board = ({ isXNext, squares, onPlay }: BoardProps) => {
-    const handleClick = (i: number) => {
-        if (squares[i] || calculateWinner(squares)) {
-            return
-        }
-        const nextSquares = squares.slice()
-        if (isXNext) {
-            nextSquares[i] = "X"
-        } else {
-            nextSquares[i] = "O"
-        }
-        onPlay(nextSquares)
-    }
+const Board = () => {
+    const { state, dispatch } = useGame()
+
+    const squares = state.history[state.currentMove]
+    const isXNext = state.currentMove % 2 === 0
 
     const winner = calculateWinner(squares)
+
+    const handleClick = (i: number) => {
+        if (squares[i] || winner) return
+
+        const nextSquares = squares.slice()
+        nextSquares[i] = isXNext ? "X" : "O"
+
+        dispatch({ type: "PLAY", nextSquares })
+    }
+
     let status
     if (winner) {
         status = "Winner: " + winner
